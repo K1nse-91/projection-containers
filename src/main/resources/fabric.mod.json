@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "litematica_container_scan",
+  "version": "1.8.0",
+  "name": "投影容器",
+  "authors": ["K1nse_"],
+  "icon": "assets/litematica_container_scan/icon.png",
+  "description": "Read the contents of containers inside a Litematica area selection.",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.qianhua.containerscan.ContainerScanClient"]
+  },
+  "mixins": ["litematica_container_scan.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "fabric-networking-api-v1": "*",
+    "minecraft": ["=26.1", "=26.1.1", "=26.1.2", "=26.2", "=26.3"],
+    "java": ">=25",
+    "litematica": ">=0.27.14",
+    "malilib": ">=0.28.12"
+  }
+}

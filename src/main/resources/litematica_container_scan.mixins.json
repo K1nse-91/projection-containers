@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8.7",
+  "package": "dev.qianhua.containerscan.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "ToolModeMixin",
+    "ToolKeyCallbacksMixin",
+    "ToolHudMixin",
+    "MiniHudPayloadMixin",
+    "GuiItemRenderStateMixin",
+    "GuiRendererMixin",
+    "PictureInPictureRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

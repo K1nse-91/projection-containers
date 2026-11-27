@@ -1,0 +1,6 @@
+/build/
+/legacy/.gradle/
+/legacy/build/
+/.idea/
+*.iml
+__pycache__/

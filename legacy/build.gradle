@@ -1,0 +1,57 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' version '1.17.20'
+}
+
+def shared = file('../src/main')
+def descriptor = new JsonSlurper().parse(new File(shared, 'resources/fabric.mod.json'))
+def modDirectory = file(providers.gradleProperty('containerScanMods').getOrElse('../build/cache/mods'))
+version = descriptor.version
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.11'
+    mappings loom.officialMojangMappings()
+    modImplementation 'net.fabricmc:fabric-loader:0.20.1'
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.141.6+1.21.11'
+    modImplementation files(new File(modDirectory, 'litematica-fabric-1.21.11-0.26.16.jar'),
+                            new File(modDirectory, 'malilib-fabric-1.21.11-0.27.20.jar'))
+}
+
+sourceSets.main {
+    java.srcDirs = [new File(shared, 'java'), file('../src/1.21.11/java')]
+    resources.srcDirs = [new File(shared, 'resources')]
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+processResources {
+    doLast {
+        def output = file("${destinationDir}/fabric.mod.json")
+        def metadata = new JsonSlurper().parse(output)
+        metadata.depends.putAll([
+            'minecraft': '=1.21.11',
+            'java': '>=21',
+            'litematica': '>=0.26.16',
+            'malilib': '>=0.27.20'
+        ])
+        output.setText(JsonOutput.prettyPrint(JsonOutput.toJson(metadata)), 'UTF-8')
+
+        def mixinFile = file("${destinationDir}/litematica_container_scan.mixins.json")
+        def mixins = new JsonSlurper().parse(mixinFile)
+        mixins.compatibilityLevel = 'JAVA_21'
+        mixinFile.setText(JsonOutput.prettyPrint(JsonOutput.toJson(mixins)), 'UTF-8')
+    }
+}
+
+remapJar {
+    destinationDirectory = layout.projectDirectory.dir('../build/libs')
+}
